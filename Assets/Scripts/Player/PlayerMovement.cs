@@ -1,17 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float vspeed = 10;
-    
-    public static float hspeed;
+    [SerializeField]
+    private float vspeed = 10;
+    [SerializeField]
+    private float speedMultiplier = 1.5f;
 
-    public float speedMultiplier = 1.5f;
+    private float hspeed;
 
     private Rigidbody rb;
-
+    private bool bStartMoving = false;
 
     static PlayerMovement instance;
     public static PlayerMovement Instance
@@ -24,30 +26,55 @@ public class PlayerMovement : MonoBehaviour
         instance = this;
         rb = GetComponent<Rigidbody>();
         StartCoroutine(ChangeSpeed());
+        StaticsVariables.gameTime = 0;
+        hspeed = StaticsVariables.horizontalSpeed;
+       
     }
 
     private void FixedUpdate()
     {
-
-        MoveHorizontal();
-        if (Input.GetKey(KeyCode.W))
+        if(bStartMoving)
         {
-            MoveVertical(1);
+            MoveHorizontal();
+            if (Input.GetKey(KeyCode.W))
+            {
+                MoveVertical(1);
+            }
+            else
+            {
+
+                MoveVertical(-0.7f);
+            }
+            StaticsVariables.gameTime += Time.deltaTime;
         }
         else
         {
-            
-            MoveVertical(-0.7f);
+            if (Input.GetKey(KeyCode.W))
+            {
+                bStartMoving = true;
+                StaticsVariables.bIsGameStarted = bStartMoving;
+            }
         }
+
+        
     }
 
     private IEnumerator ChangeSpeed()
     {
         while(true)
         {
-            yield return new WaitForSeconds(15);
-            vspeed = vspeed * speedMultiplier;
-            Debug.Log("Change speed");
+            if(bStartMoving)                    //Ждем пока игрок не нажмет кнопку вверх, после чего запускаем таймер на 15 секунд
+            {
+                yield return new WaitForSeconds(15);
+                vspeed = vspeed * speedMultiplier;
+
+                Debug.Log("Change speed");
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.1f); //Если кнопка не нажата, обнуляем таймер не изменяя скорости
+            }
+            
 
         }
     }
