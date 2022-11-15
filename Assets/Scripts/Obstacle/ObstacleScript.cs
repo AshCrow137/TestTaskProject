@@ -18,6 +18,10 @@ public class ObstacleScript : MonoBehaviour
             Debug.Log("Collide");
             Destroy(other.gameObject);
             SceneController.Instance.LoadGameOverScene("GameOverMenu");
+            StaticsVariables.gameCount +=1;     // При столкновении с игроком завершаем игру,
+            SaveSystemScript.SaveGame();        // загружаем меню, увеличиваем количество попыток и сохраняем
+
+
         }
     }
 }
