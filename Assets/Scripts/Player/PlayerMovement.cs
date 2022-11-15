@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float vspeed;
+    public float vspeed = 10;
     
-    public float hspeed;
+    public static float hspeed;
+
+    public float speedMultiplier = 1.5f;
 
     private Rigidbody rb;
 
@@ -21,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     {
         instance = this;
         rb = GetComponent<Rigidbody>();
+        StartCoroutine(ChangeSpeed());
     }
 
     private void FixedUpdate()
@@ -37,6 +40,19 @@ public class PlayerMovement : MonoBehaviour
             MoveVertical(-0.7f);
         }
     }
+
+    private IEnumerator ChangeSpeed()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(15);
+            vspeed = vspeed * speedMultiplier;
+            Debug.Log("Change speed");
+
+        }
+    }
+        
+
 
     private void MoveHorizontal()
     {

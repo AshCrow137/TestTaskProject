@@ -25,9 +25,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     private void SpawnObstacle(GameObject obstacle)
     {
-        Debug.Log("Spawn obstacle");
+       
         float posx = transform.position.x;
-        float posy = Random.Range(-5, 6);
+        float posy = Random.Range(- 5,  6);
         Instantiate(obstacle, new Vector3(posx, posy, 0), Quaternion.identity);
 
 
